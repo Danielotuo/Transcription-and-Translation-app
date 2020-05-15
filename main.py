@@ -9,69 +9,75 @@ from Bio.SeqUtils import seq3
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 import matplotlib.pyplot as plt
 
-st.title("Transcription and Translation")
 
-menu = ["Menu", "Protein Synthesis", "Upload FASTA File"]
-choice = st.sidebar.selectbox("Select Activity", menu)
+def main():
+    st.title("Transcription and Translation")
 
-if choice == "Menu":
-    st.write("Transcription and translation take the information"
-             " in DNA and use it to produce proteins."
-             " Translation is the process where the information carried in "
-             "mRNA molecules is used to create proteins. The specific "
-             "sequence of nucleotides in the mRNA molecule provide the code for"
-             "the production of a protein with a specific sequence of amino acids.")
-    st.image("dnatr.gif", use_column_width=True)
-    st.subheader("Use the sidebar to select activity")
+    menu = ["Menu", "Protein Synthesis", "Upload FASTA File"]
+    choice = st.sidebar.selectbox("Select Activity", menu)
 
-elif choice == "Protein Synthesis":
-    st.subheader("Convert DNA to mRNA or to Protein sequence")
-    dna_seq = st.text_input("Enter DNA sequence")
+    if choice == "Menu":
+        st.write("Transcription and translation take the information"
+                 " in DNA and use it to produce proteins."
+                 " Translation is the process where the information carried in "
+                 "mRNA molecules is used to create proteins. The specific "
+                 "sequence of nucleotides in the mRNA molecule provide the code for"
+                 "the production of a protein with a specific sequence of amino acids.")
+        st.image("dnatr.gif", use_column_width=True)
+        st.subheader("Use the sidebar to select activity")
 
-    if dna_seq:
-        mRNA = transcribe(dna_seq)
-        st.write("Transcribed Sequence is: ", mRNA)
+    elif choice == "Protein Synthesis":
+        st.subheader("Convert DNA to mRNA or to Protein sequence")
+        dna_seq = st.text_input("Enter DNA sequence")
 
-        protein_seq = translate(dna_seq)
-        st.write("Translated Sequence is: ", protein_seq)
+        if dna_seq:
+            mRNA = transcribe(dna_seq)
+            st.write("Transcribed Sequence is: ", mRNA)
 
-        st.image("dna.jpg", use_column_width=True)
+            protein_seq = translate(dna_seq)
+            st.write("Translated Sequence is: ", protein_seq)
 
-elif choice == "Upload FASTA File":
-    st.subheader("Protein sequence")
-    sequence_file = st.file_uploader("Upload FASTA file", type=["fasta", "fa", "txt"])
+            st.image("dna.jpg", use_column_width=True)
 
-    if sequence_file:
-        dna = SeqIO.read(sequence_file, "fasta")
+    elif choice == "Upload FASTA File":
+        st.subheader("Protein sequence")
+        sequence_file = st.file_uploader("Upload FASTA file", type=["fasta", "fa", "txt"])
 
-        if st.checkbox("Details of sequence"):
-            st.write(dna)
+        if sequence_file:
+            dna = SeqIO.read(sequence_file, "fasta")
 
-        if st.checkbox("Length of sequence"):
-            st.write("length of dna sequence: ", len(dna))
+            if st.checkbox("Details of sequence"):
+                st.write(dna)
 
-        dna_seq = dna.seq
-        translated_dna = dna_seq.translate()
+            if st.checkbox("Length of sequence"):
+                st.write("length of dna sequence: ", len(dna))
 
-        if st.checkbox("Translation: Each row representing an amino acid sequence"):
-            # split amino acids before stop codon. stop codon terminates translation
-            AA = translated_dna.split('*')
-            protein_sequence = [str(i) for i in AA]
-            st.write(protein_sequence)
+            dna_seq = dna.seq
+            translated_dna = dna_seq.translate()
 
-        # change to 3 letter amino acids instead of 1 letter AA
-        if st.checkbox("View 3 letter Amino Acids"):
-            st.write(seq3(translated_dna))
+            if st.checkbox("Translation: Each row representing an amino acid sequence"):
+                # split amino acids before stop codon. stop codon terminates translation
+                AA = translated_dna.split('*')
+                protein_sequence = [str(i) for i in AA]
+                st.write(protein_sequence)
 
-        # Amino acid count
-        AA_analysed = ProteinAnalysis(str(translated_dna))
-        AA_freq = AA_analysed.count_amino_acids()
+            # change to 3 letter amino acids instead of 1 letter AA
+            if st.checkbox("View 3 letter Amino Acids"):
+                st.write(seq3(translated_dna))
 
-        if st.checkbox("Amino acid Count"):
-            st.write(AA_analysed.get_amino_acids_percent())
+            # Amino acid count
+            AA_analysed = ProteinAnalysis(str(translated_dna))
+            AA_freq = AA_analysed.count_amino_acids()
 
-        # Visualize the amino acid count
-        if st.checkbox("Visualize Amino Acid count"):
-            plt.bar(AA_freq.keys(), AA_freq.values(), color="salmon",
-                    edgecolor="black")
-        st.pyplot()
+            if st.checkbox("Amino acid Count"):
+                st.write(AA_analysed.get_amino_acids_percent())
+
+            # Visualize the amino acid count
+            if st.checkbox("Visualize Amino Acid count"):
+                plt.bar(AA_freq.keys(), AA_freq.values(), color="salmon",
+                        edgecolor="black")
+            st.pyplot()
+
+
+if __name__ == "__main__":
+    main()
