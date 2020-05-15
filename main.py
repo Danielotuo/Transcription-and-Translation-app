@@ -1,4 +1,3 @@
-import Bio
 from Bio import SeqIO
 from Bio.Seq import Seq, transcribe, translate
 from Bio.Alphabet import generic_dna, generic_rna, generic_protein
