@@ -72,6 +72,6 @@ elif choice == "Upload FASTA File":
 
         # Visualize the amino acid count
         if st.checkbox("Visualize Amino Acid count"):
-            plt.bar(AA_freq.keys(), AA_freq.values())
+            plt.bar(AA_freq.keys(), AA_freq.values(), color="salmon",
+                    edgecolor="black")
         st.pyplot()
-
